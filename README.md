@@ -15,6 +15,7 @@ Weltschmerz build nine. The page is `docs/index.html`: plain HTML and CSS, no Ja
 | File | Purpose |
 | --- | --- |
 | `parse_tracker.py` | Reads the tracker CSV, writes `out/clean_listings.csv` (git-ignored) and the aggregates in `summaries/` |
+| `make_load_sql.py` | Builds `out/load.sql`: `schema.sql` with the rows inserted |
 | `schema.sql` | Azure SQL staging table, `dim_source`, `fact_listing` and the summary queries |
 | `measures.dax` | Power BI measures |
 | `build_page.py` | Builds `docs/index.html` from `summaries/` |
@@ -28,7 +29,7 @@ python3 tests/test_baseline.py
 python3 build_page.py
 ```
 
-Then load `out/clean_listings.csv` into `stg_listing` (Azure Data Studio import wizard), run `schema.sql`, and add `measures.dax` in Power BI Desktop.
+Then `python3 make_load_sql.py`, open `out/load.sql` in Azure Data Studio and run it (it creates the tables and loads the rows). Add `measures.dax` in Power BI Desktop, using Import mode.
 
 ## Method notes
 

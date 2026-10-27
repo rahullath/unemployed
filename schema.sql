@@ -1,5 +1,6 @@
--- Azure SQL schema for the job board, counted. Load out/clean_listings.csv into stg_listing
--- (Azure Data Studio import wizard), then run the inserts below.
+-- Azure SQL schema for the job board, counted.
+-- Run make_load_sql.py to build out/load.sql, which is this file with the data inserted at the LOAD marker.
+-- Run this file directly only if you load stg_listing yourself (Azure Data Studio import wizard).
 
 CREATE TABLE stg_listing (
   listing_id      INT IDENTITY PRIMARY KEY,
@@ -17,6 +18,8 @@ CREATE TABLE stg_listing (
   status          NVARCHAR(20),
   date_applied    DATE NULL
 );
+
+-- LOAD:stg_listing
 
 CREATE TABLE dim_source (
   source               NVARCHAR(40) PRIMARY KEY,
