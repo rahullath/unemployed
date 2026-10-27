@@ -1,0 +1,18 @@
+// Power BI measures. Tables: fact_listing, dim_source, dim_date = CALENDAR(DATE(2026,9,1), DATE(2026,12,31)).
+// Relationships: fact_listing[source] -> dim_source[source]; fact_listing[date_found] -> dim_date[Date].
+
+Listings         = COUNTROWS ( fact_listing )
+Read             = CALCULATE ( [Listings], fact_listing[vet_state] <> "unread" )
+Passed           = CALCULATE ( [Listings], fact_listing[vet_state] = "passed" )
+Readable rate    = DIVIDE ( [Read], [Listings] )
+Has closing date = CALCULATE ( [Listings], fact_listing[has_closing] = TRUE () )
+Closing rate     = DIVIDE ( [Has closing date], [Listings] )
+Applied          = CALCULATE ( [Listings], fact_listing[status] IN { "applied", "rejected", "interview_invite" } )
+Interviews       = CALCULATE ( [Listings], fact_listing[status] = "interview_invite" )
+Apply rate       = DIVIDE ( [Applied], [Listings] )
+Never touched    = CALCULATE ( [Listings], fact_listing[status] = "new" )
+Marks            = DIVIDE ( [Listings], 50 )   // one mark = 50 listings
+Age at found     = AVERAGEX (
+                     FILTER ( fact_listing, NOT ISBLANK ( fact_listing[posted_date] ) ),
+                     DATEDIFF ( fact_listing[posted_date], fact_listing[date_found], DAY ) )
+Below floor      = CALCULATE ( [Listings], fact_listing[pay_annual] < 26000, NOT ISBLANK ( fact_listing[pay_annual] ) )
