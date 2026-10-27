@@ -16,3 +16,10 @@ Age at found     = AVERAGEX (
                      FILTER ( fact_listing, NOT ISBLANK ( fact_listing[posted_date] ) ),
                      DATEDIFF ( fact_listing[posted_date], fact_listing[date_found], DAY ) )
 Below floor      = CALCULATE ( [Listings], fact_listing[pay_annual] < 26000, NOT ISBLANK ( fact_listing[pay_annual] ) )
+
+// Funnel page: a calculated table gives the funnel visual its categories.
+Funnel = DATATABLE ( "stage", STRING, "order", INTEGER,
+           { { "Found", 1 }, { "Read and vetted", 2 }, { "Passed vetting", 3 }, { "Applied", 4 }, { "Interview invite", 5 } } )
+
+Funnel value = SWITCH ( SELECTEDVALUE ( Funnel[order] ),
+                 1, [Listings], 2, [Read], 3, [Passed], 4, [Applied], 5, [Interviews] )
